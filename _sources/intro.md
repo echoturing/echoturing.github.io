@@ -1,7 +1,4 @@
-Welcome to your Jupyter Book
+欢迎来到[echoturing](https://github.com/echoturing)的主页
 ============================
 
-This is a small sample book to give you a feel for how book content is
-structured.
-
-Check out the content pages bundled with this sample book to get started.
+> 都是一些平时的整理和积累

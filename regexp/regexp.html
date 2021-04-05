@@ -1,0 +1,495 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>正则表达式(regexp) &#8212; 个人笔记</title>
+    
+  <link rel="stylesheet" href="../_static/css/index.f658d18f9b420779cfdf24aa0a7e2d77.css">
+
+    
+  <link rel="stylesheet"
+    href="../_static/vendor/fontawesome/5.13.0/css/all.min.css">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="../_static/vendor/fontawesome/5.13.0/webfonts/fa-solid-900.woff2">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="../_static/vendor/fontawesome/5.13.0/webfonts/fa-brands-400.woff2">
+
+    
+      
+  <link rel="stylesheet"
+    href="../_static/vendor/open-sans_all/1.44.1/index.css">
+  <link rel="stylesheet"
+    href="../_static/vendor/lato_latin-ext/1.44.1/index.css">
+
+    
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/sphinx-book-theme.e7340bb3dbd8dde6db86f25597f54a1b.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/panels-main.c949a650a448cc0ae9fd3441c0e17fb0.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/panels-variables.06eb56fa6e07937060861dad626602ad.css" />
+    
+  <link rel="preload" as="script" href="../_static/js/index.d3f166471bb80abb5163.js">
+
+    <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/togglebutton.js"></script>
+    <script src="../_static/clipboard.min.js"></script>
+    <script src="../_static/copybutton.js"></script>
+    <script >var togglebuttonSelector = '.toggle, .admonition.dropdown, .tag_hide_input div.cell_input, .tag_hide-input div.cell_input, .tag_hide_output div.cell_output, .tag_hide-output div.cell_output, .tag_hide_cell.cell, .tag_hide-cell.cell';</script>
+    <script src="../_static/sphinx-book-theme.7d483ff0a819d6edff12ce0b1ead3928.js"></script>
+    <script async="async" src="https://unpkg.com/thebelab@latest/lib/index.js"></script>
+    <script >
+        const thebe_selector = ".thebe"
+        const thebe_selector_input = "pre"
+        const thebe_selector_output = ".output"
+    </script>
+    <script async="async" src="../_static/sphinx-thebe.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="环视(regexp)" href="regexp_lookaround.html" />
+    <link rel="prev" title="欢迎来到echoturing的主页" href="../intro.html" />
+
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="docsearch:language" content="en" />
+
+
+
+  </head>
+  <body data-spy="scroll" data-target="#bd-toc-nav" data-offset="80">
+    
+
+    <div class="container-xl">
+      <div class="row">
+          
+<div class="col-12 col-md-3 bd-sidebar site-navigation show" id="site-navigation">
+    
+        <div class="navbar-brand-box">
+<a class="navbar-brand text-wrap" href="../index.html">
+  
+  <img src="../_static/logo.png" class="logo" alt="logo">
+  
+  
+  <h1 class="site-logo" id="site-title">个人笔记</h1>
+  
+</a>
+</div><form class="bd-search d-flex align-items-center" action="../search.html" method="get">
+  <i class="icon fas fa-search"></i>
+  <input type="search" class="form-control" name="q" id="search-input" placeholder="Search this book..." aria-label="Search this book..." autocomplete="off" >
+</form>
+<nav class="bd-links" id="bd-docs-nav" aria-label="Main navigation">
+    <ul class="nav sidenav_l1">
+ <li class="toctree-l1">
+  <a class="reference internal" href="../intro.html">
+   欢迎来到echoturing的主页
+  </a>
+ </li>
+</ul>
+<p class="caption collapsible-parent">
+ <span class="caption-text">
+  Get started
+ </span>
+</p>
+<ul class="current nav sidenav_l1">
+ <li class="toctree-l1 current active">
+  <a class="current reference internal" href="#">
+   正则表达式(regexp)
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="regexp_lookaround.html">
+   环视(regexp)
+  </a>
+ </li>
+</ul>
+
+</nav> <!-- To handle the deprecated key -->
+
+<div class="navbar_extra_footer">
+  Powered by <a href="https://jupyterbook.org">Jupyter Book</a>
+</div>
+
+</div>
+
+
+          
+
+
+          
+<main class="col py-md-3 pl-md-4 bd-content overflow-auto" role="main">
+    
+    <div class="topbar container-xl fixed-top">
+    <div class="topbar-contents row">
+        <div class="col-12 col-md-3 bd-topbar-whitespace site-navigation show"></div>
+        <div class="col pl-md-4 topbar-main">
+            
+            <button id="navbar-toggler" class="navbar-toggler ml-0" type="button" data-toggle="collapse"
+                data-toggle="tooltip" data-placement="bottom" data-target=".site-navigation" aria-controls="navbar-menu"
+                aria-expanded="true" aria-label="Toggle navigation" aria-controls="site-navigation"
+                title="Toggle navigation" data-toggle="tooltip" data-placement="left">
+                <i class="fas fa-bars"></i>
+                <i class="fas fa-arrow-left"></i>
+                <i class="fas fa-arrow-up"></i>
+            </button>
+            
+            
+<div class="dropdown-buttons-trigger">
+    <button id="dropdown-buttons-trigger" class="btn btn-secondary topbarbtn" aria-label="Download this page"><i
+            class="fas fa-download"></i></button>
+
+    <div class="dropdown-buttons">
+        <!-- ipynb file if we had a myst markdown file -->
+        <a class="dropdown-buttons"
+            href="../_sources/regexp/regexp.ipynb"><button type="button"
+                class="btn btn-secondary topbarbtn" title="Download notebook file" data-toggle="tooltip"
+                data-placement="left">.ipynb</button></a>
+        <!-- Download raw file -->
+        <a class="dropdown-buttons" href="../_sources/regexp/regexp.md"><button type="button"
+                class="btn btn-secondary topbarbtn" title="Download source file" data-toggle="tooltip"
+                data-placement="left">.md</button></a>
+        <!-- Download PDF via print -->
+        <button type="button" id="download-print" class="btn btn-secondary topbarbtn" title="Print to PDF"
+            onClick="window.print()" data-toggle="tooltip" data-placement="left">.pdf</button>
+    </div>
+</div>
+
+            <!-- Source interaction buttons -->
+
+<div class="dropdown-buttons-trigger">
+    <button id="dropdown-buttons-trigger" class="btn btn-secondary topbarbtn"
+        aria-label="Connect with source repository"><i class="fab fa-github"></i></button>
+    <div class="dropdown-buttons sourcebuttons">
+        <a class="repository-button"
+            href="https://github.com/echoturing/echoturing.github.io"><button type="button" class="btn btn-secondary topbarbtn"
+                data-toggle="tooltip" data-placement="left" title="Source repository"><i
+                    class="fab fa-github"></i>repository</button></a>
+        <a class="issues-button"
+            href="https://github.com/echoturing/echoturing.github.io/issues/new?title=Issue%20on%20page%20%2Fregexp/regexp.html&body=Your%20issue%20content%20here."><button
+                type="button" class="btn btn-secondary topbarbtn" data-toggle="tooltip" data-placement="left"
+                title="Open an issue"><i class="fas fa-lightbulb"></i>open issue</button></a>
+        
+    </div>
+</div>
+
+
+            <!-- Full screen (wrap in <a> to have style consistency -->
+            <a class="full-screen-button"><button type="button" class="btn btn-secondary topbarbtn" data-toggle="tooltip"
+                    data-placement="bottom" onclick="toggleFullScreen()" aria-label="Fullscreen mode"
+                    title="Fullscreen mode"><i
+                        class="fas fa-expand"></i></button></a>
+
+            <!-- Launch buttons -->
+
+<div class="dropdown-buttons-trigger">
+    <button id="dropdown-buttons-trigger" class="btn btn-secondary topbarbtn"
+        aria-label="Launch interactive content"><i class="fas fa-rocket"></i></button>
+    <div class="dropdown-buttons">
+        
+        <a class="binder-button" href="https://mybinder.org/v2/gh/echoturing/echoturing.github.io/gh-pages?urlpath=tree/docs/regexp/regexp.md"><button type="button"
+                class="btn btn-secondary topbarbtn" title="Launch Binder" data-toggle="tooltip"
+                data-placement="left"><img class="binder-button-logo"
+                    src="../_static/images/logo_binder.svg"
+                    alt="Interact on binder">Binder</button></a>
+        
+        
+        
+        
+    </div>
+</div>
+
+        </div>
+
+        <!-- Table of contents -->
+        <div class="d-none d-md-block col-md-2 bd-toc show">
+            
+        <div class="tocsection onthispage pt-5 pb-3">
+            <i class="fas fa-list"></i>
+            Contents
+        </div>
+        <nav id="bd-toc-nav">
+            <ul class="nav section-nav flex-column">
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#id1">
+   匹配中文
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#id2">
+   逻辑表达式
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#id3">
+     与
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#id4">
+     或
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#id5">
+   非
+  </a>
+ </li>
+</ul>
+
+        </nav>
+        
+        </div>
+    </div>
+</div>
+    <div id="main-content" class="row">
+        <div class="col-12 col-md-9 pl-md-3 pr-md-0">
+        
+              <div>
+                
+  <div class="section" id="regexp">
+<h1>正则表达式(regexp)<a class="headerlink" href="#regexp" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="id1">
+<h2>匹配中文<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h2>
+<blockquote>
+<div><p>匹配中文字符的正则表达式： [\u4e00-\u9fa5]
+匹配双字节字符(包括汉字在内)：[^\x00-\xff]</p>
+</div></blockquote>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">re</span>
+<span class="n">unicodeRegexp</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;[\u4e00-\u9fa5]+&#39;</span><span class="p">)</span>
+<span class="n">multiByteRegexp</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;[^\x00-\xff]+&#39;</span><span class="p">)</span>
+<span class="n">test1</span> <span class="o">=</span> <span class="s2">&quot;xxx这是中文xxx😿&quot;</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;中文字符匹配&quot;</span><span class="p">,</span><span class="n">unicodeRegexp</span><span class="o">.</span><span class="n">findall</span><span class="p">(</span><span class="n">test1</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;多字节字符匹配(emoji表情是多字节,不在中文编码里面)&quot;</span><span class="p">,</span><span class="n">multiByteRegexp</span><span class="o">.</span><span class="n">findall</span><span class="p">(</span><span class="n">test1</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>中文字符匹配 [&#39;这是中文&#39;]
+多字节字符匹配(emoji表情是多字节,不在中文编码里面) [&#39;这是中文&#39;, &#39;😿&#39;]
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+<div class="section" id="id2">
+<h2>逻辑表达式<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="id3">
+<h3>与<a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h3>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># 常规正则默认都是逻辑与</span>
+<span class="c1"># 比如你有两个pattern:foo和bar</span>
+<span class="c1"># 则这两个pattern组合在一起的时候:(foo)(bar)则必须匹配foobar这个连续的词</span>
+<span class="n">foobarRegexp</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;foobar&#39;</span><span class="p">)</span>
+<span class="n">test1</span> <span class="o">=</span> <span class="s2">&quot;prefixfoobarsuffix&quot;</span>
+<span class="n">test2</span> <span class="o">=</span> <span class="s2">&quot;prefixbarfoosuffix&quot;</span>
+<span class="n">test3</span> <span class="o">=</span> <span class="s2">&quot;prefixfoo_barsuffix&quot;</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="n">test1</span><span class="p">,</span> <span class="n">foobarRegexp</span><span class="o">.</span><span class="n">findall</span><span class="p">(</span><span class="n">test1</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">test2</span><span class="p">,</span> <span class="n">foobarRegexp</span><span class="o">.</span><span class="n">findall</span><span class="p">(</span><span class="n">test2</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">test3</span><span class="p">,</span> <span class="n">foobarRegexp</span><span class="o">.</span><span class="n">findall</span><span class="p">(</span><span class="n">test3</span><span class="p">))</span>
+
+<span class="c1"># 所以上边的代码只有test1能匹配出结果</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>prefixfoobarsuffix [&#39;foobar&#39;]
+prefixbarfoosuffix []
+prefixfoo_barsuffix []
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+<div class="section" id="id4">
+<h3>或<a class="headerlink" href="#id4" title="Permalink to this headline">¶</a></h3>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># 所有的量词都可以被解释为`或`,比如 *(0次或多次),+(1次或多次),?(0次或1次),(pattern){x,y}(至少x次,最多y次)</span>
+<span class="c1"># 多个不同的patten中间使用`|`分割,比如 (foo|bar)代表要么匹配foo要么匹配bar</span>
+<span class="c1"># 字符组,也叫做方括号表达式(bracketed expression),比如[1-9]匹配1~9之间的任意数字,[a-z]匹配a-z之间的任意数字</span>
+<span class="n">foobarRegexp</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;(foo|bar)&#39;</span><span class="p">)</span>
+<span class="n">test1</span> <span class="o">=</span> <span class="s2">&quot;prefixfoosuffix&quot;</span>
+<span class="n">test2</span> <span class="o">=</span> <span class="s2">&quot;prefixbarsuffix&quot;</span>
+<span class="n">test3</span> <span class="o">=</span> <span class="s2">&quot;prefixfoo_barsuffix&quot;</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="n">test1</span><span class="p">,</span><span class="n">foobarRegexp</span><span class="o">.</span><span class="n">findall</span><span class="p">(</span><span class="n">test1</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">test2</span><span class="p">,</span><span class="n">foobarRegexp</span><span class="o">.</span><span class="n">findall</span><span class="p">(</span><span class="n">test2</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">test3</span><span class="p">,</span><span class="n">foobarRegexp</span><span class="o">.</span><span class="n">findall</span><span class="p">(</span><span class="n">test3</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>prefixfoosuffix [&#39;foo&#39;]
+prefixbarsuffix [&#39;bar&#39;]
+prefixfoo_barsuffix [&#39;foo&#39;, &#39;bar&#39;]
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="section" id="id5">
+<h2>非<a class="headerlink" href="#id5" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p>非一般来说有两种方式处理,一种是方括号表达式最前边加一个<code class="docutils literal notranslate"><span class="pre">^</span></code>,比如[^a-z]表示不包含a~z的字符的其他字符</p></li>
+<li><p><a class="reference internal" href="regexp_lookaround.html"><span class="doc std std-doc">环视</span></a>(其中的反前瞻和反后顾),使用反前瞻(?!pattern)和反后顾(?&lt;!pattern)</p></li>
+</ul>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># 现在以删除所有除去a,img的html标签,并保留所有text内容为例，一步一步的实现我们的需求</span>
+<span class="n">test</span> <span class="o">=</span> <span class="s1">&#39;&#39;&#39;</span>
+<span class="s1">&lt;div&gt;</span>
+<span class="s1">    &lt;a href=&quot;http://foobar.com&quot;&gt;点击跳转&lt;/a&gt;</span>
+<span class="s1">    &lt;img src=&quot;http://foo.com/bar.jpg&quot; /&gt;</span>
+<span class="s1">    &lt;p class=&quot;border&quot;&gt;这是P的内容&lt;/p&gt;</span>
+<span class="s1">&lt;/div&gt;</span>
+<span class="s1">&#39;&#39;&#39;</span>
+<span class="c1"># 我们最终只保留如下内容:</span>
+<span class="sd">&quot;&quot;&quot;&lt;a href=&quot;http://foobar.com&quot;&gt;点击跳转&lt;/a&gt;</span>
+<span class="sd">    &lt;img src=&quot;http://foo.com/bar.jpg&quot; /&gt;</span>
+<span class="sd">    这是P的内容</span>
+<span class="sd">&quot;&quot;&quot;</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&#39;&lt;a href=&quot;http://foobar.com&quot;&gt;点击跳转&lt;/a&gt;\n    &lt;img src=&quot;http://foo.com/bar.jpg&quot; /&gt;\n    这是P的内容\n&#39;
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># html的标签目前看来是以&lt;开头的,第二个字符可以是/用以代表一个闭合标签,中间不包含&gt;并右边以&gt;结尾的，所以可以用 &lt;/?[^&gt;]+&gt; 匹配</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;只包含html标签:&quot;</span><span class="p">,</span> <span class="n">re</span><span class="o">.</span><span class="n">findall</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;&lt;/?[^&gt;]*&gt;&#39;</span><span class="p">,</span> <span class="n">test</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>只包含html标签: [&#39;&lt;div&gt;&#39;, &#39;&lt;a href=&quot;http://foobar.com&quot;&gt;&#39;, &#39;&lt;/a&gt;&#39;, &#39;&lt;img src=&quot;http://foo.com/bar.jpg&quot; /&gt;&#39;, &#39;&lt;p class=&quot;border&quot;&gt;&#39;, &#39;&lt;/p&gt;&#39;, &#39;&lt;/div&gt;&#39;]
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># 如果我们的需求是删掉所有html标签,只剩text内容的话，现在只需要用空字符串替换掉这些标签就行</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;删除所有html标签后:&quot;</span><span class="p">,</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;&lt;/?[^&gt;]*&gt;&#39;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">test</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>删除所有html标签后: 
+
+    点击跳转
+    
+    这是P的内容
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># 那现在我们需要保留a和img标签，怎么做呢?首先，如果我们要匹配所有的a和img标签应该这样 &lt;/?(a|img)[^&gt;]*&gt;</span>
+<span class="c1"># 但是由于python的findall的机制问题，所以我们默认用一个非捕获语法(?:pattern)来屏蔽到单独的a和img的输出</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;只包含a和img标签:&quot;</span><span class="p">,</span> <span class="n">re</span><span class="o">.</span><span class="n">findall</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;(&lt;/?(?:a|img)[^&gt;]*&gt;)&#39;</span><span class="p">,</span> <span class="n">test</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>只包含a和img标签: [&#39;&lt;a href=&quot;http://foobar.com&quot;&gt;&#39;, &#39;&lt;/a&gt;&#39;, &#39;&lt;img src=&quot;http://foo.com/bar.jpg&quot; /&gt;&#39;]
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># 所以如果要删除a和img标签的话，那直接用空字符串替换掉匹配的标签就行了，但是我们实际上是需要留下这两个标签</span>
+<span class="c1"># 那么我们就可以使用反前瞻来实现。具体的正则就是先前两个的组合</span>
+<span class="c1"># 首先我们要匹配出所有非a和img的标签  (?!&lt;/?(?:a|img)[^&gt;]*&gt;) </span>
+<span class="c1"># 然后再去尝试匹配其他标签  &lt;/?[^&gt;]*&gt;</span>
+<span class="c1"># 所以最终的正则看起来应该是这两者拼起来的 (?!&lt;/?(?:a|img)[^&gt;]*&gt;)(&lt;/?[^&gt;]*&gt;)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;只保留a和img以及所有text&quot;</span><span class="p">,</span><span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;(?!&lt;/?(?:a|img)[^&gt;]*&gt;)(&lt;/?[^&gt;]*&gt;)&#39;</span><span class="p">,</span><span class="s2">&quot;&quot;</span><span class="p">,</span><span class="n">test</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>只保留a和img以及所有text 
+
+    &lt;a href=&quot;http://foobar.com&quot;&gt;点击跳转&lt;/a&gt;
+    &lt;img src=&quot;http://foo.com/bar.jpg&quot; /&gt;
+    这是P的内容
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+</div>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            kernelName: "python3",
+            path: "./regexp"
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+              </div>
+              
+        
+        <div class='prev-next-bottom'>
+            
+    <a class='left-prev' id="prev-link" href="../intro.html" title="previous page">欢迎来到echoturing的主页</a>
+    <a class='right-next' id="next-link" href="regexp_lookaround.html" title="next page">环视(regexp)</a>
+
+        </div>
+        
+        </div>
+    </div>
+    <footer class="footer mt-5 mt-md-0">
+    <div class="container">
+      <p>
+        
+          By echoturing@gmail.com<br/>
+        
+            &copy; Copyright 2020.<br/>
+      </p>
+    </div>
+  </footer>
+</main>
+
+
+      </div>
+    </div>
+
+    
+  <script src="../_static/js/index.d3f166471bb80abb5163.js"></script>
+
+
+    
+  </body>
+</html>

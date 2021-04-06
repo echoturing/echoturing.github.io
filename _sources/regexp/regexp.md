@@ -81,10 +81,9 @@ test = '''
 </div>
 '''
 # 我们最终只保留如下内容:
-"""<a href="http://foobar.com">点击跳转</a>
-    <img src="http://foo.com/bar.jpg" />
-    这是P的内容
-"""
+# <a href="http://foobar.com">点击跳转</a>
+#     <img src="http://foo.com/bar.jpg" />
+#     这是P的内容
 ```
 
 ```{code-cell} ipython3

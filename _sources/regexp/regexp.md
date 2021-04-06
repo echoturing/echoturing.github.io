@@ -66,10 +66,10 @@ print(test2,foobarRegexp.findall(test2))
 print(test3,foobarRegexp.findall(test3))
 ```
 
-## 非
+### 非
 
 - 非一般来说有两种方式处理,一种是方括号表达式最前边加一个`^`,比如[^a-z]表示不包含a~z的字符的其他字符
-- [环视](regexp_lookaround.md)(其中的反前瞻和反后顾),使用反前瞻(?!pattern)和反后顾(?<!pattern)
+- 另一种是[环视](regexp_lookaround.md),使用反前瞻(?!pattern)和反后顾(?<!pattern)
 
 ```{code-cell} ipython3
 # 现在以删除所有除去a,img的html标签,并保留所有text内容为例，一步一步的实现我们的需求

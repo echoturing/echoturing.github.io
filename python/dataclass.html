@@ -233,31 +233,55 @@
  </li>
  <li class="toc-h2 nav-item toc-entry">
   <a class="reference internal nav-link" href="#python-dataclass-example">
-   Python Dataclass example
+   <code class="docutils literal notranslate">
+    <span class="pre">
+     Python
+    </span>
+    <span class="pre">
+     Dataclass
+    </span>
+    <span class="pre">
+     example
+    </span>
+   </code>
   </a>
   <ul class="nav section-nav flex-column">
    <li class="toc-h3 nav-item toc-entry">
     <a class="reference internal nav-link" href="#field">
-     field
+     <code class="docutils literal notranslate">
+      <span class="pre">
+       field
+      </span>
+     </code>
     </a>
    </li>
    <li class="toc-h3 nav-item toc-entry">
     <a class="reference internal nav-link" href="#post-init">
-     <strong>
-      post_init
-     </strong>
+     <code class="docutils literal notranslate">
+      <span class="pre">
+       __post_init__
+      </span>
+     </code>
     </a>
    </li>
   </ul>
  </li>
  <li class="toc-h2 nav-item toc-entry">
   <a class="reference internal nav-link" href="#faq">
-   FAQ
+   <code class="docutils literal notranslate">
+    <span class="pre">
+     FAQ
+    </span>
+   </code>
   </a>
   <ul class="nav section-nav flex-column">
    <li class="toc-h3 nav-item toc-entry">
     <a class="reference internal nav-link" href="#dataclass">
-     1.什么时候使用dataclass?
+     <code class="docutils literal notranslate">
+      <span class="pre">
+       1.什么时候使用dataclass?
+      </span>
+     </code>
     </a>
    </li>
   </ul>
@@ -283,7 +307,7 @@
 <code class="docutils literal notranslate"><span class="pre">Dataclasses</span></code>在Python3.7被引入，提供了一个更简单的方式来创建<code class="docutils literal notranslate"><span class="pre">class</span></code>。</p>
 </div>
 <div class="section" id="python-dataclass-example">
-<h2>Python Dataclass example<a class="headerlink" href="#python-dataclass-example" title="Permalink to this headline">¶</a></h2>
+<h2><code class="docutils literal notranslate"><span class="pre">Python</span> <span class="pre">Dataclass</span> <span class="pre">example</span></code><a class="headerlink" href="#python-dataclass-example" title="Permalink to this headline">¶</a></h2>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">Book</span><span class="p">:</span>
@@ -330,7 +354,7 @@ Book(name=&#39;name book&#39;, weight=10, shelf_id=0)
 </div>
 </div>
 <div class="section" id="field">
-<h3>field<a class="headerlink" href="#field" title="Permalink to this headline">¶</a></h3>
+<h3><code class="docutils literal notranslate"><span class="pre">field</span></code><a class="headerlink" href="#field" title="Permalink to this headline">¶</a></h3>
 <p>上边的例子在大部分情况下就够用了，但是有时候你想自定义一下默认值，这时候你可以使用<code class="docutils literal notranslate"><span class="pre">field</span></code></p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -350,7 +374,7 @@ Book(name=&#39;name book&#39;, weight=10, shelf_id=0)
 </div>
 </div>
 <div class="section" id="post-init">
-<h3><strong>post_init</strong><a class="headerlink" href="#post-init" title="Permalink to this headline">¶</a></h3>
+<h3><code class="docutils literal notranslate"><span class="pre">__post_init__</span></code><a class="headerlink" href="#post-init" title="Permalink to this headline">¶</a></h3>
 <p>如果你有更复杂的定制，那你可以使用 <code class="docutils literal notranslate"><span class="pre">__post_init__</span></code></p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -384,9 +408,9 @@ Book(name=&#39;name book&#39;, weight=10, shelf_id=0)
 </div>
 </div>
 <div class="section" id="faq">
-<h2>FAQ<a class="headerlink" href="#faq" title="Permalink to this headline">¶</a></h2>
+<h2><code class="docutils literal notranslate"><span class="pre">FAQ</span></code><a class="headerlink" href="#faq" title="Permalink to this headline">¶</a></h2>
 <div class="section" id="dataclass">
-<h3>1.什么时候使用dataclass?<a class="headerlink" href="#dataclass" title="Permalink to this headline">¶</a></h3>
+<h3><code class="docutils literal notranslate"><span class="pre">1.什么时候使用dataclass?</span></code><a class="headerlink" href="#dataclass" title="Permalink to this headline">¶</a></h3>
 <p><code class="docutils literal notranslate"><span class="pre">dataclass</span></code>的一个常用方式就是替换 <code class="docutils literal notranslate"><span class="pre">namedtuple</span></code>，它们都可以创建不可变对象，<code class="docutils literal notranslate"><span class="pre">&#64;dataclass(frozen=True)</span></code>。</p>
 <p>另一个用途就是用来替换嵌套的<code class="docutils literal notranslate"><span class="pre">dict</span></code></p>
 </div>

@@ -24,7 +24,7 @@ Python的Dataclasses
 
 
 
-## Python Dataclass example
+## `Python Dataclass example`
 
 ```{code-cell} python3
 class Book:
@@ -56,7 +56,7 @@ print(Book('name book', 10))
 
 ```
 
-### field
+### `field`
 上边的例子在大部分情况下就够用了，但是有时候你想自定义一下默认值，这时候你可以使用`field`
 
 ```{code-cell} python3
@@ -74,7 +74,7 @@ class Book:
 
 ```
 
-### __post_init__
+### `__post_init__`
 如果你有更复杂的定制，那你可以使用 `__post_init__`
 
 ```{code-cell} python
@@ -98,9 +98,9 @@ class Book:
 print(Book("book"))
 ```
 
-## FAQ
+## `FAQ`
 
-### 1.什么时候使用dataclass?
+### `1.什么时候使用dataclass?`
 
 `dataclass`的一个常用方式就是替换 `namedtuple`，它们都可以创建不可变对象，`@dataclass(frozen=True)`。
 

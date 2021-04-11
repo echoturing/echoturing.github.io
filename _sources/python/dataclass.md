@@ -95,7 +95,7 @@ class Book:
         else:
             self.shelf_id = 0
 
-print(Book("book"))
+print(Book("book","Discarded"))
 ```
 
 ## `FAQ`

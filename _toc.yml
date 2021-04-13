@@ -2,7 +2,12 @@
 # Learn more at https://jupyterbook.org/customize/toc.html
 #
 - file: intro
-- part: Get started
+- part: regexp
   chapters:
-  - file: regexp/regexp
-  - file: regexp/regexp_lookaround
+    - file: regexp/regexp
+    - file: regexp/regexp_lookaround
+
+- part: Python
+  chapters:
+    - file: python/dataclass
+    - file: python/protobuf

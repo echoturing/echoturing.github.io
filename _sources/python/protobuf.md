@@ -13,7 +13,7 @@ kernelspec:
   name: python3
 ---
 
-官方的protobuf生成的文件IDE不能自动补全
+protobuf生成的文件IDE不能自动补全
 =========================
 
 # 前言

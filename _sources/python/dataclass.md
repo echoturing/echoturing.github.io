@@ -106,3 +106,7 @@ print(Book("book","Discarded"))
 
 另一个用途就是用来替换嵌套的`dict`
 
+### `2.json序列化?`
+
+配合 [dataclass-json](https://lidatong.github.io/dataclasses-json/) 可以非常方便的实现和`object->json`,`json->object`之间的转化
+

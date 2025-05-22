@@ -1,4 +1,20 @@
-# MySQL innodb 事务隔离级别以及幻读详解
+---
+jupytext:
+  cell_metadata_filter: -all
+  formats: md:myst
+  text_representation:
+    extension: .md
+    format_name: myst
+    format_version: 0.13
+    jupytext_version: 1.10.3
+kernelspec:
+  display_name: Python 3
+  language: python
+  name: python3
+---
+
+MySQL innodb 事务隔离级别以及幻读详解
+=========================
 
 ## MySQL 提供了四种标准的事务隔离级别，每种级别解决了不同的并发问题
 

@@ -1,15 +1,10 @@
 format: jb-book
 root: intro
-parts:
-- caption: regexp
-  chapters:
-  - file: regexp/regexp
-  - file: regexp/regexp_lookaround
-- caption: Python
-  chapters:
-  - file: python/dataclass
-  - file: python/protobuf
-- caption: MySQL
-  chapters:
-  - file: mysql/redo_undo_bin
-  - file: mysql/isolation_level
+chapters:
+  - file: regexp
+  - file: regexp_lookaround
+  - file: redo_undo_bin
+  - file: isolation_level
+  - file: dataclass
+  - file: protobuf
+

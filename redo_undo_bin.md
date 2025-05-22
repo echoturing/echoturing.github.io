@@ -1,4 +1,20 @@
-# MySQL Redo Log , Undo Log 以及 Binlog 的区别
+---
+jupytext:
+  cell_metadata_filter: -all
+  formats: md:myst
+  text_representation:
+    extension: .md
+    format_name: myst
+    format_version: 0.13
+    jupytext_version: 1.10.3
+kernelspec:
+  display_name: Python 3
+  language: python
+  name: python3
+---
+
+MySQL Redo Log , Undo Log 以及 Binlog 的区别
+=========================
 
 MySQL 中的 redo log、undo log 和 binlog（binary log）是三种不同用途的日志机制，它们在保证数据库的事务性、持久性、可恢复性以及复制功能方面发挥着重要作用。以下是它们的详细对比：
 

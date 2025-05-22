@@ -8,7 +8,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>欢迎来到echoturing的主页 &#8212; 个人笔记</title>
+    <title>环视(regexp) &#8212; 个人笔记</title>
   
   
   
@@ -57,10 +57,11 @@
     <script async="async" src="_static/sphinx-thebe.js?v=c100c467"></script>
     <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
     <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
-    <script>DOCUMENTATION_OPTIONS.pagename = 'intro';</script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'regexp_lookaround';</script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="正则表达式(regexp)" href="regexp.html" />
+    <link rel="next" title="MySQL Redo Log , Undo Log 以及 Binlog 的区别" href="redo_undo_bin.html" />
+    <link rel="prev" title="正则表达式(regexp)" href="regexp.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
   </head>
@@ -123,8 +124,6 @@
       
       
       
-        
-      
       <div class="bd-sidebar-primary bd-sidebar">
         
 
@@ -143,7 +142,7 @@
     
   
 
-<a class="navbar-brand logo" href="#">
+<a class="navbar-brand logo" href="intro.html">
   
   
   
@@ -174,15 +173,15 @@
     <div class="bd-toc-item navbar-nav active">
         
         <ul class="nav bd-sidenav bd-sidenav__home-link">
-            <li class="toctree-l1 current active">
-                <a class="reference internal" href="#">
+            <li class="toctree-l1">
+                <a class="reference internal" href="intro.html">
                     欢迎来到echoturing的主页
                 </a>
             </li>
         </ul>
-        <ul class="nav bd-sidenav">
+        <ul class="current nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="regexp.html">正则表达式(regexp)</a></li>
-<li class="toctree-l1"><a class="reference internal" href="regexp_lookaround.html">环视(regexp)</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">环视(regexp)</a></li>
 <li class="toctree-l1"><a class="reference internal" href="redo_undo_bin.html">MySQL Redo Log , Undo Log 以及 Binlog 的区别</a></li>
 <li class="toctree-l1"><a class="reference internal" href="isolation_level.html">MySQL innodb 事务隔离级别以及幻读详解</a></li>
 <li class="toctree-l1"><a class="reference internal" href="dataclass.html">Python的Dataclasses</a></li>
@@ -259,7 +258,7 @@
       
       
       
-      <li><a href="https://github.com/echoturing/echoturing.github.io/issues/new?title=Issue%20on%20page%20%2Fintro.html&body=Your%20issue%20content%20here." target="_blank"
+      <li><a href="https://github.com/echoturing/echoturing.github.io/issues/new?title=Issue%20on%20page%20%2Fregexp_lookaround.html&body=Your%20issue%20content%20here." target="_blank"
    class="btn btn-sm btn-source-issues-button dropdown-item"
    title="Open an issue"
    data-bs-placement="left" data-bs-toggle="tooltip"
@@ -289,7 +288,7 @@
       
       
       
-      <li><a href="_sources/intro.md" target="_blank"
+      <li><a href="_sources/regexp_lookaround.md" target="_blank"
    class="btn btn-sm btn-download-source-button dropdown-item"
    title="Download source file"
    data-bs-placement="left" data-bs-toggle="tooltip"
@@ -360,7 +359,9 @@ document.write(`
   </button>
 `);
 </script>
-
+<button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button>
 </div></div>
       
     </div>
@@ -371,11 +372,26 @@ document.write(`
               
 
 <div id="jb-print-docs-body" class="onlyprint">
-    <h1>欢迎来到echoturing的主页</h1>
+    <h1>环视(regexp)</h1>
     <!-- Table of contents -->
     <div id="print-main-content">
         <div id="jb-print-toc">
             
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id1">环视</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pattern">正前瞻(?=pattern)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id2">正后顾(?&lt;=pattern)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id3">反前瞻(?!pattern)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id4">反后顾(?&lt;!pattern)</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id5">总结</a></li>
+</ul>
+            </nav>
         </div>
     </div>
 </div>
@@ -385,13 +401,113 @@ document.write(`
 <div id="searchbox"></div>
                 <article class="bd-article">
                   
-  <section class="tex2jax_ignore mathjax_ignore" id="echoturing">
-<h1>欢迎来到<a class="reference external" href="https://github.com/echoturing">echoturing</a>的主页<a class="headerlink" href="#echoturing" title="Link to this heading">#</a></h1>
-<blockquote>
-<div><p>都是一些平时的整理和积累</p>
-</div></blockquote>
-<div class="toctree-wrapper compound">
+  <section class="tex2jax_ignore mathjax_ignore" id="regexp">
+<h1>环视(regexp)<a class="headerlink" href="#regexp" title="Link to this heading">#</a></h1>
+<section id="id1">
+<h2>环视<a class="headerlink" href="#id1" title="Link to this heading">#</a></h2>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>环视是一种非捕获分组，它根据某个模式之前或之后的内容匹配其他模式。环视也 称为零宽度断言。
+同样是零宽度断言的还有有`\b`(匹配单词边界),`^`(匹配一行的开头),`$`(匹配一行的结尾)
+</pre></div>
 </div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">re</span>
+</pre></div>
+</div>
+</div>
+</div>
+<section id="pattern">
+<h3>正前瞻(?=pattern)<a class="headerlink" href="#pattern" title="Link to this heading">#</a></h3>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">re</span>
+<span class="n">test</span> <span class="o">=</span> <span class="s2">&quot;prefix123suffix&quot;</span>
+<span class="c1"># 现在我们的需求是在prefix和123之间加一个_分隔一下</span>
+<span class="c1"># 正前瞻(?=pattern)的意思是:和普通的pattern一样,但是它只是匹配出pattern的前边的一个位置,但是并不消耗掉任何字符</span>
+<span class="c1"># 所以我们首先要找到123这个pattern,然后直接用正前瞻找到123前边的那个位置,然后直接用_替换掉那个位置就完成了需求</span>
+<span class="n">pattern</span> <span class="o">=</span> <span class="sa">r</span><span class="s1">&#39;(?=123)&#39;</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="n">pattern</span><span class="p">,</span><span class="s2">&quot;_&quot;</span><span class="p">,</span><span class="n">test</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>prefix_123suffix
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="id2">
+<h3>正后顾(?&lt;=pattern)<a class="headerlink" href="#id2" title="Link to this heading">#</a></h3>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">re</span>
+<span class="c1"># 后顾和前瞻其实差别就是前瞻匹配的是pattern前边的位置，后顾是pattern后边的位置</span>
+<span class="c1"># 所以如果我们的需求是在123和suffix之间加一个_分割一下</span>
+<span class="c1"># 那我们只需要把前瞻语法改为后顾语法就行</span>
+<span class="n">test</span> <span class="o">=</span> <span class="s2">&quot;prefix123suffix&quot;</span>
+<span class="n">pattern</span> <span class="o">=</span> <span class="sa">r</span><span class="s1">&#39;(?&lt;=123)&#39;</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="n">pattern</span><span class="p">,</span><span class="s2">&quot;_&quot;</span><span class="p">,</span><span class="n">test</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>prefix123_suffix
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="id3">
+<h3>反前瞻(?!pattern)<a class="headerlink" href="#id3" title="Link to this heading">#</a></h3>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">re</span>
+<span class="c1"># 反前瞻就是正前瞻的否定</span>
+<span class="c1"># 比如我们之前的(?=123)匹配的是123前边的那个位置</span>
+<span class="c1"># (?!123)则匹配的是非123前边的位置,对于prefix123suffix这个case来说，位置就比较多了。</span>
+<span class="c1"># 简单起见，我们这里把case改为a123b,那么(?!(123))则匹配了不是123这个pattern的前边的位置,如果在这些位置用_填充的话，结果为_a1_2_3_b_</span>
+<span class="n">test</span> <span class="o">=</span> <span class="s2">&quot;a123b&quot;</span>
+<span class="n">pattern</span> <span class="o">=</span> <span class="sa">r</span><span class="s1">&#39;(?!123)&#39;</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="n">pattern</span><span class="p">,</span><span class="s2">&quot;_&quot;</span><span class="p">,</span><span class="n">test</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>_a1_2_3_b_
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="id4">
+<h3>反后顾(?&lt;!pattern)<a class="headerlink" href="#id4" title="Link to this heading">#</a></h3>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">re</span>
+<span class="c1"># 反后顾就是正后顾的否定</span>
+<span class="c1"># 同样的，我们这里case为a123b,那么(?&lt;!(123))则匹配了不是123这个pattern的后边的位置,如果在这些位置用_填充的话，结果为_a_1_2_3b_</span>
+<span class="n">test</span> <span class="o">=</span> <span class="s2">&quot;a123b&quot;</span>
+<span class="n">pattern</span> <span class="o">=</span> <span class="sa">r</span><span class="s1">&#39;(?&lt;!123)&#39;</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="n">pattern</span><span class="p">,</span><span class="s2">&quot;_&quot;</span><span class="p">,</span><span class="n">test</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>_a_1_2_3b_
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="id5">
+<h2>总结<a class="headerlink" href="#id5" title="Link to this heading">#</a></h2>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>正前瞻和正后顾因为是对pattern的肯定,所以用的时候和一般的pattern差不太多。
+反前瞻和反后顾由于是对pattern的否定,所以一般会在前边或者后边搭配其他一些pattern使用。不然匹配的位置就太多了一些
+</pre></div>
+</div>
+</section>
 </section>
 
     <script type="text/x-thebe-config">
@@ -424,12 +540,21 @@ document.write(`
                 <footer class="prev-next-footer d-print-none">
                   
 <div class="prev-next-area">
-    <a class="right-next"
+    <a class="left-prev"
        href="regexp.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">正则表达式(regexp)</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="redo_undo_bin.html"
        title="next page">
       <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">正则表达式(regexp)</p>
+        <p class="prev-next-title">MySQL Redo Log , Undo Log 以及 Binlog 的区别</p>
       </div>
       <i class="fa-solid fa-angle-right"></i>
     </a>
@@ -439,6 +564,28 @@ document.write(`
             </div>
             
             
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id1">环视</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pattern">正前瞻(?=pattern)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id2">正后顾(?&lt;=pattern)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id3">反前瞻(?!pattern)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id4">反后顾(?&lt;!pattern)</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id5">总结</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
               
             
           </div>

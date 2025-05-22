@@ -6,8 +6,9 @@
 
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Index &#8212; 个人笔记</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>MySQL innodb 事务隔离级别以及幻读详解 &#8212; 个人笔记</title>
   
   
   
@@ -56,9 +57,11 @@
     <script async="async" src="_static/sphinx-thebe.js?v=c100c467"></script>
     <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
     <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
-    <script>DOCUMENTATION_OPTIONS.pagename = 'genindex';</script>
-    <link rel="index" title="Index" href="#" />
+    <script>DOCUMENTATION_OPTIONS.pagename = 'isolation_level';</script>
+    <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Python的Dataclasses" href="dataclass.html" />
+    <link rel="prev" title="MySQL Redo Log , Undo Log 以及 Binlog 的区别" href="redo_undo_bin.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
   </head>
@@ -121,8 +124,6 @@
       
       
       
-        
-      
       <div class="bd-sidebar-primary bd-sidebar">
         
 
@@ -178,11 +179,11 @@
                 </a>
             </li>
         </ul>
-        <ul class="nav bd-sidenav">
+        <ul class="current nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="regexp.html">正则表达式(regexp)</a></li>
 <li class="toctree-l1"><a class="reference internal" href="regexp_lookaround.html">环视(regexp)</a></li>
 <li class="toctree-l1"><a class="reference internal" href="redo_undo_bin.html">MySQL Redo Log , Undo Log 以及 Binlog 的区别</a></li>
-<li class="toctree-l1"><a class="reference internal" href="isolation_level.html">MySQL innodb 事务隔离级别以及幻读详解</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">MySQL innodb 事务隔离级别以及幻读详解</a></li>
 <li class="toctree-l1"><a class="reference internal" href="dataclass.html">Python的Dataclasses</a></li>
 <li class="toctree-l1"><a class="reference internal" href="protobuf.html">protobuf生成的文件IDE不能自动补全</a></li>
 
@@ -257,7 +258,7 @@
       
       
       
-      <li><a href="https://github.com/echoturing/echoturing.github.io/issues/new?title=Issue%20on%20page%20%2Fgenindex.html&body=Your%20issue%20content%20here." target="_blank"
+      <li><a href="https://github.com/echoturing/echoturing.github.io/issues/new?title=Issue%20on%20page%20%2Fisolation_level.html&body=Your%20issue%20content%20here." target="_blank"
    class="btn btn-sm btn-source-issues-button dropdown-item"
    title="Open an issue"
    data-bs-placement="left" data-bs-toggle="tooltip"
@@ -269,6 +270,54 @@
   </span>
 <span class="btn__text-container">Open issue</span>
 </a>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="_sources/isolation_level.md" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.md</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
 </li>
       
   </ul>
@@ -310,7 +359,9 @@ document.write(`
   </button>
 `);
 </script>
-
+<button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button>
 </div></div>
       
     </div>
@@ -321,11 +372,28 @@ document.write(`
               
 
 <div id="jb-print-docs-body" class="onlyprint">
-    <h1></h1>
+    <h1>MySQL innodb 事务隔离级别以及幻读详解</h1>
     <!-- Table of contents -->
     <div id="print-main-content">
         <div id="jb-print-toc">
             
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#mysql">MySQL 提供了四种标准的事务隔离级别，每种级别解决了不同的并发问题</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#mysql-repeated-read">以下是常规四种隔离级别的介绍(注意: mysql 的 repeated read 是可以部分解决幻读的)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id1">解决的问题</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#mysql-repeatable-read">为什么说 Mysql 的 REPEATABLE READ 隔离级别可以部分解决幻读问题</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#mvcc">1. mvcc 的快照读防止幻读</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id2">2. 但是也有例外</a></li>
+</ul>
+</li>
+</ul>
+            </nav>
         </div>
     </div>
 </div>
@@ -335,13 +403,183 @@ document.write(`
 <div id="searchbox"></div>
                 <article class="bd-article">
                   
-
-<h1 id="index">Index</h1>
-
-<div class="genindex-jumpbox">
- 
+  <section class="tex2jax_ignore mathjax_ignore" id="mysql-innodb">
+<h1>MySQL innodb 事务隔离级别以及幻读详解<a class="headerlink" href="#mysql-innodb" title="Link to this heading">#</a></h1>
+<section id="mysql">
+<h2>MySQL 提供了四种标准的事务隔离级别，每种级别解决了不同的并发问题<a class="headerlink" href="#mysql" title="Link to this heading">#</a></h2>
+<section id="mysql-repeated-read">
+<h3>以下是常规四种隔离级别的介绍(注意: mysql 的 repeated read 是可以部分解决幻读的)<a class="headerlink" href="#mysql-repeated-read" title="Link to this heading">#</a></h3>
+<ol class="arabic simple">
+<li><p>READ UNCOMMITTED（读未提交）</p>
+<ul class="simple">
+<li><p>最低隔离级别</p></li>
+<li><p>事务可以读取其他事务未提交的修改（”脏读”）</p></li>
+</ul>
+</li>
+<li><p>READ COMMITTED（读已提交）</p>
+<ul class="simple">
+<li><p>事务只能读取其他事务已提交的修改</p></li>
+<li><p>解决了脏读问题</p></li>
+</ul>
+</li>
+<li><p>REPEATABLE READ（可重复读）</p>
+<ul class="simple">
+<li><p>MySQL 默认隔离级别</p></li>
+<li><p>确保在同一事务中多次读取相同数据结果一致</p></li>
+<li><p>解决了脏读和不可重复读问题</p></li>
+</ul>
+</li>
+<li><p>SERIALIZABLE（串行化）</p>
+<ul class="simple">
+<li><p>最高隔离级别</p></li>
+<li><p>完全串行执行事务</p></li>
+<li><p>解决了脏读、不可重复读和幻读问题</p></li>
+</ul>
+</li>
+</ol>
+</section>
+<section id="id1">
+<h3>解决的问题<a class="headerlink" href="#id1" title="Link to this heading">#</a></h3>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>隔离级别</p></th>
+<th class="head text-center"><p>脏读</p></th>
+<th class="head text-center"><p>不可重复读</p></th>
+<th class="head text-center"><p>幻读</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>READ UNCOMMITTED</p></td>
+<td class="text-center"><p>❌</p></td>
+<td class="text-center"><p>❌</p></td>
+<td class="text-center"><p>❌</p></td>
+</tr>
+<tr class="row-odd"><td><p>READ COMMITTED</p></td>
+<td class="text-center"><p>✅</p></td>
+<td class="text-center"><p>❌</p></td>
+<td class="text-center"><p>❌</p></td>
+</tr>
+<tr class="row-even"><td><p>REPEATABLE READ</p></td>
+<td class="text-center"><p>✅</p></td>
+<td class="text-center"><p>✅</p></td>
+<td class="text-center"><p>❌</p></td>
+</tr>
+<tr class="row-odd"><td><p>SERIALIZABLE</p></td>
+<td class="text-center"><p>✅</p></td>
+<td class="text-center"><p>✅</p></td>
+<td class="text-center"><p>✅</p></td>
+</tr>
+</tbody>
+</table>
 </div>
+<p>具体问题解释：</p>
+<ol class="arabic simple">
+<li><p>脏读（Dirty Read）：一个事务读取了另一个未提交事务修改过的数据</p></li>
+<li><p>不可重复读（Non-repeatable Read）：同一事务内，多次读取同一数据返回不同结果（因为其他事务修改了数据）</p></li>
+<li><p>幻读（Phantom Read) ：同一事务内，多次查询返回不同的行集（因为其他事务插入了新数据）</p></li>
+</ol>
+</section>
+</section>
+<section id="mysql-repeatable-read">
+<h2>为什么说 Mysql 的 REPEATABLE READ 隔离级别可以部分解决幻读问题<a class="headerlink" href="#mysql-repeatable-read" title="Link to this heading">#</a></h2>
+<p>先建个表(以下都是在 REPEATABLE READ 隔离级别下的)</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">CREATE</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="k">user</span>
+<span class="p">(</span>
+<span class="w">    </span><span class="n">id</span><span class="w">   </span><span class="nb">INT</span><span class="w"> </span><span class="k">PRIMARY</span><span class="w"> </span><span class="k">KEY</span><span class="p">,</span>
+<span class="w">    </span><span class="n">name</span><span class="w"> </span><span class="nb">VARCHAR</span><span class="p">(</span><span class="mi">100</span><span class="p">)</span>
+<span class="p">);</span>
+</pre></div>
+</div>
+<section id="mvcc">
+<h3>1. mvcc 的快照读防止幻读<a class="headerlink" href="#mvcc" title="Link to this heading">#</a></h3>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>trasactionA</p></th>
+<th class="head"><p>trasactionB</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>begin;</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p>select * from user; # 快照读(生成 read view)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p></p></td>
+<td><p>begin;</p></td>
+</tr>
+<tr class="row-odd"><td><p></p></td>
+<td><p>insert into user (id,name) values (10,”xx”);</p></td>
+</tr>
+<tr class="row-even"><td><p></p></td>
+<td><p>commit;</p></td>
+</tr>
+<tr class="row-odd"><td><p>select * from user; # 这时候是查不到 id=10 这条记录的,因为 mysql 的 mvcc 且常规 select 是快照读</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p>commit</p></td>
+<td><p></p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<section id="id2">
+<h3>2. 但是也有例外<a class="headerlink" href="#id2" title="Link to this heading">#</a></h3>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>trasactionA</p></th>
+<th class="head"><p>trasactionB</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>begin;</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p>select * from user; # 快照读(生成 read view)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p></p></td>
+<td><p>begin;</p></td>
+</tr>
+<tr class="row-odd"><td><p></p></td>
+<td><p>insert into user (id,name) values (10,”xx”);</p></td>
+</tr>
+<tr class="row-even"><td><p></p></td>
+<td><p>commit;</p></td>
+</tr>
+<tr class="row-odd"><td><p>select * from user for update; #for update 是当前读,所以会查出 id=10 的,这时候又幻读了</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p>commit</p></td>
+<td><p></p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+</section>
+</section>
 
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./."
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
 
                 </article>
               
@@ -353,12 +591,54 @@ document.write(`
                 <footer class="prev-next-footer d-print-none">
                   
 <div class="prev-next-area">
+    <a class="left-prev"
+       href="redo_undo_bin.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">MySQL Redo Log , Undo Log 以及 Binlog 的区别</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="dataclass.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Python的Dataclasses</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
 </div>
                 </footer>
               
             </div>
             
             
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#mysql">MySQL 提供了四种标准的事务隔离级别，每种级别解决了不同的并发问题</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#mysql-repeated-read">以下是常规四种隔离级别的介绍(注意: mysql 的 repeated read 是可以部分解决幻读的)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id1">解决的问题</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#mysql-repeatable-read">为什么说 Mysql 的 REPEATABLE READ 隔离级别可以部分解决幻读问题</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#mvcc">1. mvcc 的快照读防止幻读</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id2">2. 但是也有例外</a></li>
+</ul>
+</li>
+</ul>
+  </nav></div>
+
+</div></div>
               
             
           </div>

@@ -1,13 +1,11 @@
-# Table of content
-# Learn more at https://jupyterbook.org/customize/toc.html
-#
-- file: intro
-- part: regexp
+format: jb-book
+root: intro
+parts:
+- caption: regexp
   chapters:
-    - file: regexp/regexp
-    - file: regexp/regexp_lookaround
-
-- part: Python
+  - file: regexp/regexp
+  - file: regexp/regexp_lookaround
+- caption: Python
   chapters:
-    - file: python/dataclass
-    - file: python/protobuf
+  - file: python/dataclass
+  - file: python/protobuf

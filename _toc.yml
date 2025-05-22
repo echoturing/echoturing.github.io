@@ -9,3 +9,7 @@ parts:
   chapters:
   - file: python/dataclass
   - file: python/protobuf
+- caption: MySQL
+  chapters:
+  - file: mysql/redo_undo_bin
+  - file: mysql/isolation_level
